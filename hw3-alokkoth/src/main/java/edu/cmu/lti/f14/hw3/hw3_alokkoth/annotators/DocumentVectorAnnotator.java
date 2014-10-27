@@ -28,28 +28,28 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
     // TODO Auto-generated method stub
     StopWords = new HashSet<String>();
     File stopfile = new File("src/main/resources/stopwords.txt");
-    FileReader fileReader = null;
+    FileReader fr = null;
     try {
-      fileReader = new FileReader(stopfile);
+      fr = new FileReader(stopfile);
     } catch (FileNotFoundException e) {
      
       e.printStackTrace();
     }
-    BufferedReader bufferedReader = new BufferedReader(fileReader);
-    StringBuffer stringBuffer = new StringBuffer();
+    BufferedReader br = new BufferedReader(fr);
+    
     String line;
     try {
-      while ((line = bufferedReader.readLine()) != null) {
+      while ((line = br.readLine()) != null) {
         StopWords.add(line);
       }
     } catch (IOException e) {
-      // TODO Auto-generated catch block
+  
       e.printStackTrace();
     }
     try {
-      fileReader.close();
+      fr.close();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
+     
       e.printStackTrace();
     }
   }
