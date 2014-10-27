@@ -1,7 +1,13 @@
 package edu.cmu.lti.f14.hw3.hw3_alokkoth.annotators;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIterator;
@@ -17,7 +23,36 @@ import edu.cmu.lti.f14.hw3.hw3_alokkoth.utils.Utils;
 
 public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
 
-
+  HashSet<String> StopWords;
+  public void initialize(UimaContext aContext) {
+    // TODO Auto-generated method stub
+    StopWords = new HashSet<String>();
+    File stopfile = new File("src/main/resources/stopwords.txt");
+    FileReader fileReader = null;
+    try {
+      fileReader = new FileReader(stopfile);
+    } catch (FileNotFoundException e) {
+     
+      e.printStackTrace();
+    }
+    BufferedReader bufferedReader = new BufferedReader(fileReader);
+    StringBuffer stringBuffer = new StringBuffer();
+    String line;
+    try {
+      while ((line = bufferedReader.readLine()) != null) {
+        StopWords.add(line);
+      }
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    try {
+      fileReader.close();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 	
 	public void process(JCas jcas) throws AnalysisEngineProcessException {
 
@@ -68,6 +103,16 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
 	        res.add(s.toLowerCase());
 	      return res;
 	    }
+	   List<String> MyTokenizer3(String doc) {
+       List<String> res = new ArrayList<String>();
+       
+       for (String s: doc.split("[\\p{Punct}\\s]+"))
+         
+         if(!StopWords.contains(s) && s.length() > 1)
+         {
+         res.add(s.toLowerCase());}
+       return res;
+     }
 	 
 	  /**
 	   * tokenizer which uses the stanford lemmatizer, 
@@ -101,8 +146,8 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
       for (String s: doc.split("[\\p{Punct}\\s]+")) {
         s = s.toLowerCase();
         s = stanfordlemmatizer.stemWord(s);
-        //if(!StopWords.contains(s) && s.length() > 1)
-          res.add(s);
+        if(!StopWords.contains(s))
+          {res.add(s);}
       }
       
       return res;

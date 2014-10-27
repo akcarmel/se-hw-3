@@ -65,6 +65,7 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 	 * Populates the relevant lists by reading from the CAS.
 	 */
 	@Override
+	
 	public void processCas(CAS aCas) throws ResourceProcessException {
 
 		JCas jcas;
@@ -130,6 +131,8 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
     Map<String, Integer> queryMap = fsList.get(i);
       CosineScores.add(1.0);
     int j=i+1;
+    System.out.println("###############");
+    System.out.println(docList.get(i));
       while(j < qIdList.size() && qIdList.get(i) == qIdList.get(j)) 
       {
         Map<String, Integer> docMap = fsList.get(j);
@@ -141,16 +144,23 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
          * System.out.println(qIdList.get(i));
         
          */
-        
+         System.out.println("Question ID");
+         System.out.println(qIdList.get(i));
+         System.out.println("Document ID");
+         System.out.println(j-i);
+         System.out.println(docList.get(j));
+         System.out.println(queryMap);
+         System.out.println(docMap);
         /** SIMILARITY SCORES **/
         CosineScores.add(computeCosineSimilarity(queryMap, docMap));
+        System.out.println(computeCosineSimilarity(queryMap, docMap));
         // CosineScores.add(computeJaccardSimilarity(queryMap, docMap));
         //CosineScores.add(computeDiceSimilarity(queryMap, docMap));
         j++;
       }
       i = j;
     }
-	  // TODO :: compute the rank of retrieved sentences
+	  
 	   int t = 0;
 	    while( t < qIdList.size()) {
 	      ArrayList<Integer> temp = new ArrayList<Integer>();
@@ -161,7 +171,7 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 	        temp.add(p);
 	        p++;
 	      }
-	      
+	      /** Comparator between scores **/
 	      Collections.sort(temp,  new Comparator<Integer>() {
 	        public int compare(Integer o1, Integer o2) {
 	          return CosineScores.get(o1).compareTo(CosineScores.get(o2));
@@ -174,6 +184,7 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 	          Ranks.add(n + 1);
 	          MaxCosine.add(CosineScores.get(temp.get(n)));
 	          BestDoc.add(docList.get(temp.get(n)));
+	          //System.out.println(docList.get(temp.get(n)));
 	          break;
 	        }
 	      }
