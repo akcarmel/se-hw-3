@@ -171,9 +171,9 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
 	private void createTermFreqVector(JCas jcas, Document doc) {
 
 		String docText = doc.getText();
-		//List<String> tokenized = tokenize0(docText); //Given Tokenizer T0
+		List<String> tokenized = tokenize0(docText); //Given Tokenizer T0
 		//List<String> tokenized = MyTokenizerAux(docText); // T0 A1
-	List<String> tokenized = MyTokenizerAux2(docText); // T0 A2
+	//List<String> tokenized = MyTokenizerAux2(docText); // T0 A2
 		//List<String> tokenized = MyTokenizer1(docText); //My Tokenizer T1
 		//List<String> tokenized = MyStanfordStemmerTokenizer1(docText); //T2
 	// List<String> tokenized = MyStanfordStemmerTokenizer2(docText);// T3
