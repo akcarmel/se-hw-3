@@ -80,11 +80,11 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
 	  return res;
 	}
 	/**
-	 * One more basic tokenizer which splits the punctuation too.  (It increases performance).
+	 * One more basic tokenizer which splits the punctuation too.
 	 * @param doc input text
 	 * @return a list of tokens
 	 */
-	 List<String> MyTokenizer1(String doc) {
+	 List<String> MyTokenizerAux(String doc) {
 	    List<String> res = new ArrayList<String>();
 	    
 	    for (String s: doc.split("[\\p{Punct}\\s]+"))
@@ -96,19 +96,25 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
 	   * @param doc input text
 	   * @return a list of tokens
 	   */
-	   List<String> MyTokenizer2(String doc) {
+	   List<String> MyTokenizerAux2(String doc) {
 	      List<String> res = new ArrayList<String>();
 	      
 	      for (String s: doc.split("[\\p{Punct}\\s]+"))
 	        res.add(s.toLowerCase());
 	      return res;
 	    }
-	   List<String> MyTokenizer3(String doc) {
+	   /**
+	     * One more basic tokenizer which splits the punctuation too AND lowercases the strings  
+	     * It removes stopwords too.(It increases performance).
+	     * @param doc input text
+	     * @return a list of tokens
+	     */
+	   List<String> MyTokenizer1(String doc) {
        List<String> res = new ArrayList<String>();
        
        for (String s: doc.split("[\\p{Punct}\\s]+"))
          
-         if(!StopWords.contains(s) && s.length() > 1)
+         if(!StopWords.contains(s.toLowerCase()))
          {
          res.add(s.toLowerCase());}
        return res;
@@ -120,7 +126,7 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
 	   * @param doc input text
 	   * @return a list of tokens
 	   */
-	  List<String> MyStanfordStemmerTokenizer(String doc) {
+	  List<String> MyStanfordStemmerTokenizer1(String doc) {
 	    List<String> res = new ArrayList<String>();
 	    
 	    StanfordLemmatizer stanfordlemmatizer = new StanfordLemmatizer();
@@ -128,7 +134,7 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
 	      s = s.toLowerCase();
 	      s = stanfordlemmatizer.stemWord(s);
 	    
-	        res.add(s);
+	        res.add(s.toLowerCase());
 	    }
 	    
 	    return res;
@@ -147,7 +153,7 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
         s = s.toLowerCase();
         s = stanfordlemmatizer.stemWord(s);
         if(!StopWords.contains(s))
-          {res.add(s);}
+          {res.add(s.toLowerCase());}
       }
       
       return res;
@@ -165,9 +171,12 @@ public class DocumentVectorAnnotator extends JCasAnnotator_ImplBase {
 	private void createTermFreqVector(JCas jcas, Document doc) {
 
 		String docText = doc.getText();
-		List<String> tokenized = tokenize0(docText); //Given Tokenizer
-		//List<String> tokenized = MyTokenizer(docText); //Given Tokenizer
-		//List<String> tokenized = MyStanfordStemmerTokenizer(docText);
+		//List<String> tokenized = tokenize0(docText); //Given Tokenizer T0
+		//List<String> tokenized = MyTokenizerAux(docText); // T0 A1
+	List<String> tokenized = MyTokenizerAux2(docText); // T0 A2
+		//List<String> tokenized = MyTokenizer1(docText); //My Tokenizer T1
+		//List<String> tokenized = MyStanfordStemmerTokenizer1(docText); //T2
+	// List<String> tokenized = MyStanfordStemmerTokenizer2(docText);// T3
 		Map<String, Integer> tokens = new HashMap<String, Integer>();
 		for(String s: tokenized)
 		{

@@ -152,10 +152,12 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
          System.out.println(queryMap);
          System.out.println(docMap);
         /** SIMILARITY SCORES **/
-        CosineScores.add(computeCosineSimilarity(queryMap, docMap));
         System.out.println(computeCosineSimilarity(queryMap, docMap));
-        // CosineScores.add(computeJaccardSimilarity(queryMap, docMap));
-        //CosineScores.add(computeDiceSimilarity(queryMap, docMap));
+       
+         CosineScores.add(computeCosineSimilarity(queryMap, docMap)); // S0
+        
+        //CosineScores.add(computeJaccardSimilarity(queryMap, docMap)); // S1
+        //CosineScores.add(computeDiceSimilarity(queryMap, docMap)); // S2
         j++;
       }
       i = j;
